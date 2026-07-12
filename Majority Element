@@ -1,0 +1,54 @@
+import java.util.*;
+
+
+class Solution {
+
+    public int majorityElement(int[] nums) {
+
+        int n = nums.length;
+
+        // HashMap to store frequency of elements
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        // Count occurrences
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+
+        // Find majority element
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > n / 2) {
+                return entry.getKey();
+            }
+        }
+
+        return -1;
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        // Input size of array
+        int n = sc.nextInt();
+
+        int[] arr = new int[n];
+
+        // Input array elements
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        // Create Solution object
+        Solution sol = new Solution();
+
+        int ans = sol.majorityElement(arr);
+
+        System.out.println( ans);
+
+        sc.close();
+    }
+}
