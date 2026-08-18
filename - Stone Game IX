@@ -1,0 +1,21 @@
+class Solution {
+    public boolean stoneGameIX(int[] stones) {
+        int[] cnt = new int[3];
+
+        // Count stones according to remainder when divided by 3
+        for (int stone : stones) {
+            cnt[stone % 3]++;
+        }
+
+        // If number of remainder-0 stones is even,
+        // Alice wins iff both remainder-1 and remainder-2 stones exist.
+        if (cnt[0] % 2 == 0) {
+            return cnt[1] > 0 && cnt[2] > 0;
+        }
+
+        // If number of remainder-0 stones is odd,
+        // Alice wins only if the difference between
+        // remainder-1 and remainder-2 stones is greater than 2.
+        return Math.abs(cnt[1] - cnt[2]) > 2;
+    }
+}
