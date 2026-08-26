@@ -26,7 +26,7 @@ class Solution {
             // Exactly k ones
             if (ones == k) {
 
-                // Remove unnecessary leading zeroes.
+                // Remove unnecessary leading zeroes. 
                 while (s.charAt(left) == '0') {
                     left++;
                 }
