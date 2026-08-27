@@ -1,0 +1,108 @@
+class Solution {
+
+    public String lexGreaterPermutation(String s, String target) {
+
+        int n = s.length();
+
+        // Frequency of characters in s
+        int[] freq = new int[26];
+
+        for (char ch : s.toCharArray()) {
+            freq[ch - 'a']++;
+        }
+
+        // Number of characters successfully matched with target
+        int matched = 0;
+
+        // Try to follow target from left to right
+        for (int i = 0; i < n; i++) {
+
+            int cur = target.charAt(i) - 'a';
+
+            // We cannot use target[i].
+            // First try to put a character bigger than target[i].
+            if (freq[cur] == 0) {
+
+                for (int bigger = cur + 1; bigger < 26; bigger++) {
+
+                    if (freq[bigger] > 0) {
+                        return buildAnswer(
+                            target,
+                            matched,
+                            bigger,
+                            freq
+                        );
+                    }
+                }
+
+                // No bigger character at this position.
+                // We must backtrack.
+                break;
+            }
+
+            // Use target[i]
+            freq[cur]--;
+            matched++;
+        }
+
+        /*
+         * We either:
+         * 1. Matched the entire target, or
+         * 2. Could not make the current position bigger.
+         *
+         * Now backtrack.
+         */
+
+        for (int i = matched - 1; i >= 0; i--) {
+
+            // Restore target[i]
+            int cur = target.charAt(i) - 'a';
+            freq[cur]++;
+
+            // Try the smallest character bigger than target[i]
+            for (int bigger = cur + 1; bigger < 26; bigger++) {
+
+                if (freq[bigger] > 0) {
+
+                    return buildAnswer(
+                        target,
+                        i,
+                        bigger,
+                        freq
+                    );
+                }
+            }
+        }
+
+        return "";
+    }
+
+    private String buildAnswer(
+            String target,
+            int prefixLength,
+            int bigger,
+            int[] freq) {
+
+        StringBuilder ans = new StringBuilder();
+
+        // 1. Keep prefix equal to target
+        for (int i = 0; i < prefixLength; i++) {
+            ans.append(target.charAt(i));
+        }
+
+        // 2. Put the smallest character bigger than target[prefixLength]
+        ans.append((char) ('a' + bigger));
+        freq[bigger]--;
+
+        // 3. Put all remaining characters in sorted order
+        for (int c = 0; c < 26; c++) {
+
+            while (freq[c] > 0) {
+                ans.append((char) ('a' + c));
+                freq[c]--;
+            }
+        }
+
+        return ans.toString();
+    }
+}
