@@ -1,0 +1,60 @@
+class Solution {
+    public int minSumOfLengths(int[] arr, int target) {
+        int n = arr.length;
+        int INF = 1000000;
+
+        int[] prefix = new int[n];
+        int[] suffix = new int[n];
+
+        // Build prefix[]
+        // prefix[i] = shortest valid subarray ending before or at i
+        int left = 0;
+        int sum = 0;
+        int best = INF;
+
+        for (int right = 0; right < n; right++) {
+            sum += arr[right];
+
+            while (sum > target) {
+                sum -= arr[left++];
+            }
+
+            if (sum == target) {
+                best = Math.min(best, right - left + 1);
+            }
+
+            prefix[right] = best;
+        }
+
+        // Build suffix[]
+        // suffix[i] = shortest valid subarray starting at or after i
+        left = n - 1;
+        sum = 0;
+        best = INF;
+
+        for (int right = n - 1; right >= 0; right--) {
+            sum += arr[right];
+
+            while (sum > target) {
+                sum -= arr[left--];
+            }
+
+            if (sum == target) {
+                best = Math.min(best, left - right + 1);
+            }
+
+            suffix[right] = best;
+        }
+
+        // Combine two non-overlapping subarrays
+        int answer = INF;
+
+        for (int i = 0; i < n - 1; i++) {
+            if (prefix[i] < INF && suffix[i + 1] < INF) {
+                answer = Math.min(answer, prefix[i] + suffix[i + 1]);
+            }
+        }
+
+        return answer == INF ? -1 : answer;
+    }
+}
